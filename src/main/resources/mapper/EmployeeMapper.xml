@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xgcen.mapper.EmployeeMapper">
+
+    <resultMap id="allColumnsResult" type="employee">
+        <id column="id" property="id"/>
+        <result column="last_name" property="lastName"/>
+        <result column="gender" property="gender"/>
+        <result column="email" property="email"/>
+        <association column="d_id" property="dept" select="com.xgcen.mapper.DepartmentMapper.selectOneById"/>
+    </resultMap>
+
+    <select id="selectOneById" resultMap="allColumnsResult">
+        SELECT * FROM tb1_employee WHERE id=#{id}
+    </select>
+
+    <select id="selectList" resultMap="allColumnsResult">
+        SELECT * FROM tb1_employee
+        <if test="ids!=null">
+            <foreach collection="ids" item="id" open=" WHERE id IN (" separator="," close=")">
+                #{id}
+            </foreach>
+        </if>
+        <if test="limit!=null and limit>0">
+            LIMIT #{limit}
+        </if>
+    </select>
+
+</mapper>
